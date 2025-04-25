@@ -13,13 +13,13 @@ endfunction()
 find_package(GTest)
 find_package(absl)
 
-add_benchmark(old_parlay_hash other "" "" "")
+# add_benchmark(old_parlay_hash other "" "" "")
 add_benchmark(parlay_hash other "absl::flags;absl::flags_parse" "" "")
-add_benchmark(std_hash other "" "" "")
-add_benchmark(std_sharded other "" "" "")
-add_benchmark(libcuckoo other "" "" "")
-add_benchmark(parallel_hashmap other "" "" "")
-add_benchmark(seq_hash other "" "" "")
+# add_benchmark(std_hash other "" "" "")
+# add_benchmark(std_sharded other "" "" "")
+# add_benchmark(libcuckoo other "" "" "")
+# add_benchmark(parallel_hashmap other "" "" "")
+# add_benchmark(seq_hash other "" "" "")
 
 #add_subdirectory(abseil-cpp)
 if (absl_FOUND)
@@ -41,14 +41,6 @@ endif()
 
 set(BOOST_DIR ${PARLAYHASH_SOURCE_DIR}/build/benchmarks/boost_1_83_0)
 
-# We have to manually specify Boost's location since we are using the latest
-# cutting-edge Boost version, and FindBoost.cmake can not find Boost.Unordered
-if (BOOST_DIR)
-  add_benchmark(boost_hash other "" "" "")
-  target_include_directories(boost_hash PRIVATE ${BOOST_DIR})
-endif()
-
-set(BENCH_FILES "runtests.py" "run_graphs" "runall")
 
 function(copy_bench_file NAME)
   file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/${NAME}

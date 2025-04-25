@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.13)
 project(PARLAYHASH VERSION 1.0 DESCRIPTION "Lock-Free Locks" LANGUAGES CXX)
-
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 # Set a default build type
 if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Build type (Debug Release RelWithDebInfo MinSizeRel)" FORCE)
@@ -42,6 +42,7 @@ target_compile_options(parlay INTERFACE -g)
 find_package(Threads REQUIRED)
 target_link_libraries(parlay INTERFACE Threads::Threads)
 
+
 # Link against jemalloc
 find_library(JEMALLOC_LIB jemalloc)
 if(NOT JEMALLOC_LIB)
@@ -50,6 +51,16 @@ else()
   message("-- Found jemalloc: ${JEMALLOC_LIB}")
   target_link_libraries(parlay INTERFACE optimized ${JEMALLOC_LIB})
 endif()
+
+include(FetchContent)
+FetchContent_Declare(
+  abseil
+  GIT_REPOSITORY https://github.com/abseil/abseil-cpp.git
+  GIT_TAG        master
+)
+
+FetchContent_MakeAvailable(abseil)
+
 
 add_subdirectory(benchmarks)
 
