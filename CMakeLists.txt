@@ -52,7 +52,12 @@ else()
   target_link_libraries(parlay INTERFACE optimized ${JEMALLOC_LIB})
 endif()
 
+
+
 include(FetchContent)
+find_package(absl REQUIRED)
+if(NOT absl_FOUND)
+  message(STATUS "System Abseil not found, fetching from GitHub...")
 FetchContent_Declare(
   abseil
   GIT_REPOSITORY https://github.com/abseil/abseil-cpp.git
@@ -60,7 +65,7 @@ FetchContent_Declare(
 )
 
 FetchContent_MakeAvailable(abseil)
-
+endif()
 
 add_subdirectory(benchmarks)
 
