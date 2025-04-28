@@ -373,7 +373,7 @@ struct parlay_hash {
 	overflow_size(get_overflow_size(num_bits))
     {
       buckets = (bucket*) malloc(sizeof(bucket)*size);
-      block_status = (std::atomic<status>*) malloc(sizeof(std::atomic<status>) * size/block_size);
+      block_status = (std::atomic<status>*) malloc(sizeof(std::atomic<status>) * size/min_block_size);
     }
 
     ~table_version() {
@@ -912,8 +912,8 @@ struct parlay_hash {
   void for_each(const F& f) {
     table_version* ht = current_table_version.load();
     return epoch::with_epoch([&] {
-      for(long i = 0; i < ht->size; i++)
-	for_each_bucket_rec(ht, i, f);});
+                               parallel_for(ht->size, [&] (long i) {
+                                   for_each_bucket_rec(ht, i, f);});});
   }
 
   // *********************************************
